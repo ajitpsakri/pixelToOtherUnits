@@ -1,0 +1,18 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+.left {
+  border: 0.1875rem solid black;
+  width: 18%;
+}
+.right {
+  border: 0.1875rem solid black;
+  width: 80%;
+  position: absolute;
+  left: 19%;
+  top: 8px;
+}
+.text-area {
+  width: 90%;
+}
