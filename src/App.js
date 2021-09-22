@@ -4,10 +4,11 @@ import "./styles.css";
 export default function App() {
   const [cssUnit, setCssUnit] = useState("");
   const [desiredCss, setDesiredCss] = useState("");
-
-  const handleCodeChange = (event) => {
-    //
+  const [inputCode, setInputCode] = useState("");
+  const handleInputCode = (event) => {
+    setInputCode(event.target.value);
     let inputCssCode = event.target.value;
+    // console.log(inputCssCode)
     if (cssUnit !== "") {
       setDesiredCss(() => {
         let exptectedCssCode = inputCssCode.replace(
@@ -22,6 +23,24 @@ export default function App() {
       setDesiredCss(inputCssCode);
     }
   };
+  const handleChange = (currentUnit) => {
+    let inputCssCode = inputCode;
+    // console.log(inputCssCode)
+    if (currentUnit !== "") {
+      setDesiredCss(() => {
+        let exptectedCssCode = inputCssCode.replace(
+          /([+-]?\d+\.?\d*)px/g,
+          function (match, p1) {
+            return p1 * 0.0625 + currentUnit;
+          }
+        );
+        return exptectedCssCode;
+      });
+    } else {
+      setDesiredCss(inputCssCode);
+    }
+  };
+
   return (
     <div className="App">
       <div className="left">
@@ -45,6 +64,7 @@ export default function App() {
         <input
           onChange={() => {
             setCssUnit("em");
+            handleChange("em");
           }}
           name="conversion-unit"
           value="em"
@@ -53,7 +73,10 @@ export default function App() {
         />
         REM
         <input
-          onChange={() => setCssUnit("rem")}
+          onChange={() => {
+            setCssUnit("rem");
+            handleChange("rem");
+          }}
           name="conversion-unit"
           value="rem"
           type="radio"
@@ -71,7 +94,9 @@ export default function App() {
           <textarea
             className="text-area"
             rows="10"
-            onChange={handleCodeChange}
+            onChange={(event) => {
+              handleInputCode(event);
+            }}
             id="code-textarea"
           ></textarea>
         </div>
