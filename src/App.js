@@ -102,7 +102,7 @@ export default function App() {
         </div>
         <hr />
         <div className="result">
-          <h3>Result</h3>
+          <h3>Results</h3>
           <textarea
             className="text-area"
             readOnly
