@@ -1,46 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import { flushSync } from "react-dom";
 import "./styles.css";
 
 export default function App() {
   const [cssUnit, setCssUnit] = useState("");
   const [desiredCss, setDesiredCss] = useState("");
   const [inputCode, setInputCode] = useState("");
+  const [basePixel, setBasePixel] = useState(16);
   const handleInputCode = (event) => {
     setInputCode(event.target.value);
-    let inputCssCode = event.target.value;
-    // console.log(inputCssCode)
+    // let inputCssCode = event.target.value;
+    // // console.log(inputCssCode)
+    // if (cssUnit !== "") {
+    //   setDesiredCss(() => {
+    //     let exptectedCssCode = inputCssCode.replace(
+    //       /([+-]?\d+\.?\d*)px/g,
+    //       function (match, p1) {
+    //         return p1 * (1 / basePixel) + cssUnit;
+    //       }
+    //     );
+    //     return exptectedCssCode;
+    //   });
+    // } else {
+    //   setDesiredCss(inputCssCode);
+    // }
+  };
+  const handleBasePixelChange = (event) => {
+    setBasePixel(event.target.value);
+  };
+  useEffect(() => {
     if (cssUnit !== "") {
       setDesiredCss(() => {
-        let exptectedCssCode = inputCssCode.replace(
+        let exptectedCssCode = inputCode.replace(
           /([+-]?\d+\.?\d*)px/g,
           function (match, p1) {
-            return p1 * 0.0625 + cssUnit;
+            return p1 * (1 / basePixel) + cssUnit;
           }
         );
         return exptectedCssCode;
       });
     } else {
-      setDesiredCss(inputCssCode);
+      setDesiredCss(inputCode);
     }
-  };
-  const handleChange = (currentUnit) => {
-    let inputCssCode = inputCode;
-    // console.log(inputCssCode)
-    if (currentUnit !== "") {
-      setDesiredCss(() => {
-        let exptectedCssCode = inputCssCode.replace(
-          /([+-]?\d+\.?\d*)px/g,
-          function (match, p1) {
-            return p1 * 0.0625 + currentUnit;
-          }
-        );
-        return exptectedCssCode;
-      });
-    } else {
-      setDesiredCss(inputCssCode);
-    }
-  };
-
+  }, [basePixel, cssUnit, inputCode]);
   return (
     <div className="App">
       <div className="left">
@@ -50,7 +52,14 @@ export default function App() {
           <h2>Base Pixel Size</h2>
         </label>
         <small>?</small>
-        <input type="number" id="base-pixel-size" />
+        <input
+          value={basePixel}
+          onChange={(event) => {
+            handleBasePixelChange(event);
+          }}
+          type="number"
+          id="base-pixel-size"
+        />
         <label htmlFor="affected-properties">
           <h2>Affected properties</h2>
         </label>
@@ -64,7 +73,6 @@ export default function App() {
         <input
           onChange={() => {
             setCssUnit("em");
-            handleChange("em");
           }}
           name="conversion-unit"
           value="em"
@@ -75,7 +83,6 @@ export default function App() {
         <input
           onChange={() => {
             setCssUnit("rem");
-            handleChange("rem");
           }}
           name="conversion-unit"
           value="rem"
