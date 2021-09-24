@@ -7,42 +7,54 @@ export default function App() {
   const [desiredCss, setDesiredCss] = useState("");
   const [inputCode, setInputCode] = useState("");
   const [basePixel, setBasePixel] = useState(16);
-  const handleInputCode = (event) => {
-    setInputCode(event.target.value);
-    // let inputCssCode = event.target.value;
-    // // console.log(inputCssCode)
-    // if (cssUnit !== "") {
-    //   setDesiredCss(() => {
-    //     let exptectedCssCode = inputCssCode.replace(
-    //       /([+-]?\d+\.?\d*)px/g,
-    //       function (match, p1) {
-    //         return p1 * (1 / basePixel) + cssUnit;
-    //       }
-    //     );
-    //     return exptectedCssCode;
-    //   });
-    // } else {
-    //   setDesiredCss(inputCssCode);
-    // }
+  const [listOfProperties, setListOfProperties] = useState("");
+
+  const handleInputCode = (event) => setInputCode(event.target.value);
+  const handleBasePixelChange = (event) => setBasePixel(event.target.value);
+  const handleAffectedPropertyChange = (event) =>
+    setListOfProperties(event.target.value);
+  const cssUnitConverter = (cssCode) => {
+    if (cssUnit !== "") {
+      let exptectedCssCode = cssCode.replace(/([+-]?\d+\.?\d*)px/g, function (
+        match,
+        p1
+      ) {
+        return p1 * (1 / basePixel) + cssUnit;
+      });
+      return exptectedCssCode;
+    } else {
+      return cssCode;
+    }
   };
-  const handleBasePixelChange = (event) => {
-    setBasePixel(event.target.value);
+  const expectedCssCodeGenerator = (cssCode) => {
+    setDesiredCss(() => {
+      return cssUnitConverter(cssCode);
+    });
   };
   useEffect(() => {
-    if (cssUnit !== "") {
-      setDesiredCss(() => {
-        let exptectedCssCode = inputCode.replace(
-          /([+-]?\d+\.?\d*)px/g,
-          function (match, p1) {
-            return p1 * (1 / basePixel) + cssUnit;
+    if (listOfProperties !== "") {
+      let accumulatedCssCode = inputCode;
+      listOfProperties.split(",").map((property) => {
+        setDesiredCss(() => {
+          let regexMatchPropertyLine = new RegExp(`${property}: .+`, "g");
+          let propertyLine = accumulatedCssCode.match(regexMatchPropertyLine);
+          if (propertyLine !== null) {
+            let cssUnitConvertedLine = cssUnitConverter(...propertyLine);
+            let expectedCssCode = accumulatedCssCode.replace(
+              propertyLine,
+              cssUnitConvertedLine
+            );
+            accumulatedCssCode = expectedCssCode;
+            return expectedCssCode;
+          } else {
+            expectedCssCodeGenerator(accumulatedCssCode);
           }
-        );
-        return exptectedCssCode;
+        });
       });
     } else {
-      setDesiredCss(inputCode);
+      expectedCssCodeGenerator(inputCode);
     }
-  }, [basePixel, cssUnit, inputCode]);
+  }, [basePixel, cssUnit, inputCode, listOfProperties]);
   return (
     <div className="App">
       <div className="left">
@@ -64,7 +76,11 @@ export default function App() {
           <h2>Affected properties</h2>
         </label>
         <small>?</small>
-        <input type="text" id="affected-properties" />
+        <input
+          onChange={(event) => handleAffectedPropertyChange(event)}
+          type="text"
+          id="affected-properties"
+        />
         <label htmlFor="conversion-unit">
           <h2>Conversion Unit</h2>
         </label>
