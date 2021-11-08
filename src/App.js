@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { flushSync } from "react-dom";
 import "./styles.css";
 
 export default function App() {
@@ -15,12 +14,12 @@ export default function App() {
     setListOfProperties(event.target.value);
   const cssUnitConverter = (cssCode) => {
     if (cssUnit !== "") {
-      let exptectedCssCode = cssCode.replace(/([+-]?\d+\.?\d*)px/g, function (
-        match,
-        p1
-      ) {
-        return p1 * (1 / basePixel) + cssUnit;
-      });
+      let exptectedCssCode = cssCode.replace(
+        /([+-]?\d+\.?\d*)px/g,
+        function (match, p1) {
+          return p1 * (1 / basePixel) + cssUnit;
+        }
+      );
       return exptectedCssCode;
     } else {
       return cssCode;
