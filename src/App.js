@@ -33,6 +33,7 @@ export default function App() {
   useEffect(() => {
     if (listOfProperties !== "") {
       let accumulatedCssCode = inputCode;
+      let validPropertyList = [];
       listOfProperties.split(",").map((property) => {
         setDesiredCss(() => {
           let regexMatchPropertyLine = new RegExp(`${property}: .+`, "g");
@@ -46,7 +47,8 @@ export default function App() {
             accumulatedCssCode = expectedCssCode;
             return expectedCssCode;
           } else {
-            expectedCssCodeGenerator(accumulatedCssCode);
+            //make code changes here
+            expectedCssCodeGenerator(accumulatedCssCode); //you could use inputCode because accumulatedCssCode is just created to prevent mutability of inputCode variable
           }
         });
       });
