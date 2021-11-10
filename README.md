@@ -8,7 +8,7 @@
 
       1. variables
          1. `accumulatedCssCode`: A copy of inputCode to make inputCode immutable
-         2. `validPropertyList`: Collects valid properties that are matched and when there is change in the `listOfProperties` then this can be used to maintain every
+         2. `ConvertedPropertyLineList`: Makes list of `expectedCssCode` so that it can be used when there is a invalid property name entered
          3. `regexMatchPropertyLine`: Is a regular expression object made by a `RegExp` constructor function with an argument `` `${property}: .+`, "g"``
          4. `propertyLine`: Matches property line according to `regexMatchPropertyLine`
          5. `cssUnitConvertedLine`: return value of `cssUnitConverter` function

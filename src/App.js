@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     if (listOfProperties !== "") {
       let accumulatedCssCode = inputCode;
-      let validPropertyList = [];
+      let convertedPropertyLineList = [];
       listOfProperties.split(",").map((property) => {
         setDesiredCss(() => {
           let regexMatchPropertyLine = new RegExp(`${property}: .+`, "g");
@@ -44,10 +44,17 @@ export default function App() {
               propertyLine,
               cssUnitConvertedLine
             );
+            convertedPropertyLineList.push(cssUnitConvertedLine);
             accumulatedCssCode = expectedCssCode;
             return expectedCssCode;
           } else {
             //make code changes here
+            console.log(accumulatedCssCode);
+            //lines that are in convertedPropertyLineList should be in selected cssunit
+
+            //Apart from that lines everything should be in px
+
+            console.log(convertedPropertyLineList);
             expectedCssCodeGenerator(accumulatedCssCode); //you could use inputCode because accumulatedCssCode is just created to prevent mutability of inputCode variable
           }
         });
